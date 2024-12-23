@@ -1,0 +1,140 @@
+version: '3.7'
+
+services:
+      
+  neo4j-db:
+    image: neo4j:4.4.9
+    ports:
+      - 7400:7474
+      - 7600:7687
+    environment:
+      - NEO4J_AUTH=none
+    volumes:
+        - ./Neo4j/data/:/var/lib/neo4j/import
+        
+  neo4j-data-posts:
+    build: ./Neo4j/
+    environment:
+      - DATA_FILE_PATH=post_0_0.csv
+      - ENTITY1_NAME=Post
+      - ENTITY2_NAME=
+      - ENTITY_ATTRIBUTES=id,imageFile,creationDate,locationIP,browserUsed,language,content,length
+      - RELATIONSHIP_NAME=
+      - RELATIONSHIP_ATTRIBUTES=
+      - FILE_HEADERS=
+      - DATA_SEPARATOR=|
+      - DB_DRIVER=neo4j
+      - DB_URL=neo4j-db
+      - DB_PORT=7687
+      - DB_USER=
+      - DB_PASSWORD=
+      - DB_NAME=unibench
+
+  neo4j-data-persons:
+    build: ./Neo4j/
+    environment:
+      - DATA_FILE_PATH=person_0_0.csv
+      - ENTITY1_NAME=Person
+      - ENTITY2_NAME=
+      - ENTITY_ATTRIBUTES=id,firstName,lastName,gender,birthday,creationDate,locationIP,browserUsed,place
+      - RELATIONSHIP_NAME=
+      - RELATIONSHIP_ATTRIBUTES=
+      - FILE_HEADERS=
+      - DATA_SEPARATOR=|
+      - DB_DRIVER=neo4j
+      - DB_URL=neo4j-db
+      - DB_PORT=7687
+      - DB_USER=
+      - DB_PASSWORD=
+      - DB_NAME=unibench
+
+  neo4j-data-tags:
+    build: ./Neo4j/
+    environment:
+      - DATA_FILE_PATH=Product.csv
+      - ENTITY1_NAME=Tag
+      - ENTITY2_NAME=
+      - ENTITY_ATTRIBUTES=asin,title,price,imgUrl,productId,brand
+      - RELATIONSHIP_NAME=
+      - RELATIONSHIP_ATTRIBUTES=
+      - FILE_HEADERS=
+      - DATA_SEPARATOR=,
+      - DB_DRIVER=neo4j
+      - DB_URL=neo4j-db
+      - DB_PORT=7687
+      - DB_USER=
+      - DB_PASSWORD=
+      - DB_NAME=unibench
+      
+  neo4j-data-relation-person-person:
+    build: ./Neo4j/
+    environment:
+      - DATA_FILE_PATH=person_knows_person_0_0.csv
+      - ENTITY1_NAME=Person
+      - ENTITY2_NAME=Person
+      - ENTITY_ATTRIBUTES=id,id
+      - RELATIONSHIP_NAME=knows
+      - RELATIONSHIP_ATTRIBUTES=creationDate
+      - FILE_HEADERS=from,to
+      - DATA_SEPARATOR=|
+      - DB_DRIVER=neo4j
+      - DB_URL=neo4j-db
+      - DB_PORT=7687
+      - DB_USER=
+      - DB_PASSWORD=
+      - DB_NAME=unibench
+
+  neo4j-data-relation-person-tag:
+    build: ./Neo4j/
+    environment:
+      - DATA_FILE_PATH=person_hasInterest_tag_0_0.csv
+      - ENTITY1_NAME=Person
+      - ENTITY2_NAME=Tag
+      - ENTITY_ATTRIBUTES=id,productId
+      - RELATIONSHIP_NAME=hasInterest
+      - RELATIONSHIP_ATTRIBUTES=
+      - FILE_HEADERS=PersonId,TagId
+      - DATA_SEPARATOR=|
+      - DB_DRIVER=neo4j
+      - DB_URL=neo4j-db
+      - DB_PORT=7687
+      - DB_USER=
+      - DB_PASSWORD=
+      - DB_NAME=unibench
+
+  neo4j-data-relation-post-person:
+    build: ./Neo4j/
+    environment:
+      - DATA_FILE_PATH=post_hasCreator_person_0_0.csv
+      - ENTITY1_NAME=Post
+      - ENTITY2_NAME=Person
+      - ENTITY_ATTRIBUTES=id,id
+      - RELATIONSHIP_NAME=hasCreator
+      - RELATIONSHIP_ATTRIBUTES=
+      - FILE_HEADERS=PostId,PersonId
+      - DATA_SEPARATOR=|
+      - DB_DRIVER=neo4j
+      - DB_URL=neo4j-db
+      - DB_PORT=7687
+      - DB_USER=
+      - DB_PASSWORD=
+      - DB_NAME=unibench
+
+  neo4j-data-relation-post-tag:
+    build: ./Neo4j/
+    environment:
+      - DATA_FILE_PATH=post_hasTag_tag_0_0.csv
+      - ENTITY1_NAME=Post
+      - ENTITY2_NAME=Tag
+      - ENTITY_ATTRIBUTES=id,productId
+      - RELATIONSHIP_NAME=hasTag
+      - RELATIONSHIP_ATTRIBUTES=
+      - FILE_HEADERS=PostId,TagId
+      - DATA_SEPARATOR=|
+      - DB_DRIVER=neo4j
+      - DB_URL=neo4j-db
+      - DB_PORT=7687
+      - DB_USER=
+      - DB_PASSWORD=
+      - DB_NAME=unibench
+    

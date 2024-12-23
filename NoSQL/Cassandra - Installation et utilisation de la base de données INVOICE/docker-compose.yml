@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+      
+  cassandra-db:
+    image: cassandra
+    ports:
+      - 9000:9042
+    restart: always
+
+  cassandra-data-invoice:
+    build: ./Cassandra/
+    environment:
+      - DATA_FILE_PATH=Invoice.xml
+      - ENTITY1_NAME=INVOICE
+      - ENTITY2_NAME=
+      - ENTITY_ATTRIBUTES=OrderId,PersonId,OrderDate,TotalPrice,(Orderline),Orderline.productId,Orderline.asin,Orderline.title,Orderline.price,Orderline.brand
+      - RELATIONSHIP_NAME=
+      - RELATIONSHIP_ATTRIBUTES=
+      - FILE_HEADERS=
+      - DATA_SEPARATOR=
+      - DB_DRIVER=cassandra
+      - DB_URL=cassandra-db
+      - DB_PORT=9042
+      - DB_USER=
+      - DB_PASSWORD=
+      - DB_NAME=unibench
