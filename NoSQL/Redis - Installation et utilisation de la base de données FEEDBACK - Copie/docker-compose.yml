@@ -1,0 +1,46 @@
+version: '3.7'
+
+services:
+
+  redis-db:
+    hostname: redis
+    image: redis
+    networks:
+      - redis_network
+    ports: 
+      - 6300:6379
+      
+  redis-data-feedback:
+    build: ./Redis/
+    environment:
+      - DATA_FILE_PATH=Feedback.csv
+      - ENTITY1_NAME=FEEDBACK
+      - ENTITY2_NAME=
+      - ENTITY_ATTRIBUTES=ASIN,PERSON_ID,FEEDBACK
+      - RELATIONSHIP_NAME=
+      - RELATIONSHIP_ATTRIBUTES=
+      - FILE_HEADERS=
+      - DATA_SEPARATOR=|
+      - DB_DRIVER=redis
+      - DB_URL=redis-db
+      - DB_PORT=6379
+      - DB_USER=
+      - DB_PASSWORD=
+      - DB_NAME=
+    networks:
+      - redis_network
+
+  redis-commander:
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+    - REDIS_HOSTS=local:redis-db:6379
+    ports:
+    - 8082:8081
+    networks:
+      - redis_network
+      
+networks:
+  redis_network:
+    driver: bridge
